@@ -7,8 +7,10 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.math.BigDecimal;
+
 @Data
-@Document(indexName = "product",type = "docs", shards = 3, replicas = 2)
+@Document(indexName = "product",type = "docs", shards = 3, replicas = 2,createIndex = true)
 public class Product {
     /**
      * ID 主键
@@ -41,16 +43,19 @@ public class Product {
     @Field(analyzer = FieldAnalyzer.IK_MAX_WORD, type = FieldType.Text)
     private String categoryName;
 
+    private BigDecimal price;
+
 
     @Override
     public String toString() {
-        return "ProductDO{" +
+        return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", sellPoint='" + sellPoint + '\'' +
                 ", description='" + description + '\'' +
                 ", cid=" + cid +
                 ", categoryName='" + categoryName + '\'' +
+                ", price=" + price +
                 '}';
     }
 }
