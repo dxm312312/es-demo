@@ -26,7 +26,7 @@ public class TestController {
 
     @PostMapping("/save")
     public String save(@RequestBody Product product) throws IOException {
-
+//
         //IndexRequest indexRequest = new IndexRequest("product");
         //indexRequest.source(product, XContentType.JSON);
         //elasticsearchTemplate.index(indexRequest, RequestOptions.DEFAULT);
