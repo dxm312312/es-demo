@@ -10,7 +10,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.math.BigDecimal;
 
 @Data
-@Document(indexName = "product",type = "docs", shards = 3, replicas = 2,createIndex = true)
+@Document(indexName = "product2",type = "docs", shards = 3, replicas = 2,createIndex = true)
 public class Product {
     /**
      * ID 主键
