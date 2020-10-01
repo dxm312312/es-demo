@@ -23,6 +23,7 @@ import java.util.Map;
 import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
+//换了template必须要重新创建一个索引，否则找不到？？ 这里新建了product2索引
 @RestController
 public class SpringDataESController {
 
@@ -63,9 +64,8 @@ public class SpringDataESController {
     public String update(@RequestBody Product product){
         UpdateQuery updateQuery = new UpdateQuery();
         //updateQuery.setIndexName("product");
-        updateQuery.setClazz(Product.class);
+        updateQuery.setClazz(Product.class);//更新必须要有这行代码。。。否则空指针
         updateQuery.setId(product.getId().toString());
-        product.setId(null);
         UpdateRequest request = new UpdateRequest();
         //java.lang.IllegalArgumentException: The number of object passed must be even but was [1]
         //request.doc(product);  需要转map 不然报上面的错
@@ -77,4 +77,37 @@ public class SpringDataESController {
         return null;
     }
 
+    @RequestMapping("/bulkUpdate")
+    public String bulkUpdate(@RequestBody List<Product> pList){
+        List<UpdateQuery> list = new ArrayList<>();
+        for(Product p:pList){
+            UpdateQuery updateQuery = new UpdateQuery();
+            updateQuery.setClazz(Product.class);
+            updateQuery.setId(p.getId().toString());
+            UpdateRequest request = new UpdateRequest();
+            //java.lang.IllegalArgumentException: The number of object passed must be even but was [1]
+            //request.doc(product);  需要转map 不然报上面的错
+            String json = JSON.toJSONString(p);
+            Map m = JSON.parseObject(json,Map.class);
+            request.doc(m);
+            updateQuery.setUpdateRequest(request);
+            list.add(updateQuery);
+        }
+        elasticsearchRestTemplate.bulkUpdate(list);
+        return null;
+    }
+
+    @RequestMapping("/delete")
+    public String delete(@RequestBody Product product){
+        elasticsearchRestTemplate.delete(Product.class,product.getId().toString());
+
+        return "success";
+    }
+
 }
+
+
+
+
+
+
